@@ -17,7 +17,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     console.log("Fetching CSV file...");
-    fetch("schedule.csv")
+    fetch("shifts.csv")
         .then(response => response.text())
         .then(csvText => {
             console.log("CSV content loaded:");
