@@ -34,6 +34,7 @@ document.addEventListener("DOMContentLoaded", function () {
             };
         });
 
+        // Get unique dates and populate dropdown
         const uniqueDates = [...new Set(shiftData.map(entry => entry.date))].sort();
         console.log("Unique dates found:", uniqueDates);
 
@@ -104,11 +105,6 @@ document.addEventListener("DOMContentLoaded", function () {
         document.body.classList.toggle("dark-mode");
         localStorage.setItem("dark-mode", document.body.classList.contains("dark-mode"));
     });
-
-    // Auto Dark Mode Detection
-    if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
-        document.body.classList.add("dark-mode");
-    }
 
     // Load Dark Mode Preference
     if (localStorage.getItem("dark-mode") === "true") {
