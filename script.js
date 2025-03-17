@@ -17,16 +17,19 @@ document.addEventListener("DOMContentLoaded", function () {
         .catch(error => console.error("Failed to load CSV:", error));
 
     function processCSV(csvText) {
-        const parsedData = Papa.parse(csvText, { header: true, skipEmptyLines: true });
+        const rows = csvText.trim().split("\n").map(row => row.split(","));
+        const headers = rows[0].map(header => header.trim()); // Extract headers & trim spaces
 
-        shiftData = parsedData.data.map(row => ({
-            unit: row["Unit"],
-            departureTime: row["Departure Time"],
-            driverName: row["Driver Name"],
-            run: row["Run"],
-            offDriver: row["Driver (on days off)"],
-            shift: row["Shift"],
-            date: row["Date"]
+        console.log("CSV Headers:", headers);
+
+        shiftData = rows.slice(1).map(row => ({
+            unit: row[0]?.trim(),
+            departureTime: row[1]?.trim(),
+            driverName: row[2]?.trim(),
+            run: row[3]?.trim(),
+            offDriver: row[4]?.trim(),
+            shift: row[5]?.trim(),
+            date: row[6]?.trim()
         }));
 
         const uniqueDates = [...new Set(shiftData.map(entry => entry.date))].sort();
@@ -94,16 +97,26 @@ document.addEventListener("DOMContentLoaded", function () {
         return section;
     }
 
-    // Dark Mode Toggle
+    // 🌙 Auto Dark Mode
+    function applyDarkModePreference() {
+        const systemPrefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+        const savedDarkMode = localStorage.getItem("dark-mode");
+
+        if (savedDarkMode === "true" || (savedDarkMode === null && systemPrefersDark)) {
+            document.body.classList.add("dark-mode");
+        } else {
+            document.body.classList.remove("dark-mode");
+        }
+    }
+
+    // 🎛 Dark Mode Toggle
     if (darkModeToggle) {
         darkModeToggle.addEventListener("click", () => {
             document.body.classList.toggle("dark-mode");
             localStorage.setItem("dark-mode", document.body.classList.contains("dark-mode"));
         });
-
-        // Load Dark Mode Preference
-        if (localStorage.getItem("dark-mode") === "true") {
-            document.body.classList.add("dark-mode");
-        }
     }
+
+    // ✅ Apply dark mode on page load
+    applyDarkModePreference();
 });
