@@ -1,43 +1,41 @@
 document.addEventListener("DOMContentLoaded", function () {
     console.log("[Log] Fetching CSV file...");
 
-    // Ensure the target container exists
     const tableContainer = document.getElementById("table-container");
     if (!tableContainer) {
         console.error("[Error] No element found with id 'table-container'. Ensure your HTML contains <div id='table-container'></div>");
         return;
     }
 
-    // Fetch CSV file
     fetch("shifts.csv")
         .then(response => {
-            if (!response.ok) {
-                throw new Error(`HTTP error! Status: ${response.status}`);
-            }
+            if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
             return response.text();
         })
         .then(csvContent => {
             console.log("[Log] CSV content loaded.");
 
-            // Parse CSV content into rows
-            const rows = csvContent.trim().split("\n").map(row => row.split(",").map(cell => cell.trim()));
+            // Parse CSV: Handle quoted fields correctly
+            const rows = csvContent.trim().split("\n").map(row => {
+                return row.match(/(".*?"|[^",]+)(?=\s*,|\s*$)/g).map(cell => cell.replace(/^"|"$/g, '').trim());
+            });
+
             if (rows.length < 2) {
                 console.error("[Error] CSV file is empty or improperly formatted.");
                 return;
             }
 
-            // Extract headers & data rows
             const headers = rows.shift();
             console.log("[Log] CSV Headers:", headers);
 
-            // Find the "Date" column index
-            const dateIndex = headers.findIndex(header => header.toLowerCase() === "date");
-            if (dateIndex === -1) {
-                console.error("[Error] 'Date' column not found in CSV.");
+            const dateIndex = headers.indexOf("Date");
+            const shiftIndex = headers.indexOf("Shift");
+            if (dateIndex === -1 || shiftIndex === -1) {
+                console.error("[Error] Missing 'Date' or 'Shift' column.");
                 return;
             }
 
-            // Extract unique dates & sort them
+            // Extract and sort unique dates
             const uniqueDates = [...new Set(rows.map(row => row[dateIndex]))].filter(Boolean).sort();
             console.log("[Log] Unique dates found:", uniqueDates);
 
@@ -46,45 +44,56 @@ document.addEventListener("DOMContentLoaded", function () {
                 return;
             }
 
+            // Default to today's schedule
+            const today = new Date().toISOString().split("T")[0];
+            const defaultDate = uniqueDates.includes(today) ? today : uniqueDates[0];
+
             // Create date filter dropdown
             let filterHTML = "<label for='dateFilter'>Select Date: </label>";
             filterHTML += "<select id='dateFilter'>";
             uniqueDates.forEach(date => {
-                filterHTML += `<option value="${date}">${date}</option>`;
+                filterHTML += `<option value="${date}" ${date === defaultDate ? "selected" : ""}>${date}</option>`;
             });
-            filterHTML += "</select>";
+            filterHTML += "</select><br><br>";
 
-            // Create the table structure
-            let tableHTML = "<table border='1'><thead><tr>";
-            headers.forEach(header => tableHTML += `<th>${header}</th>`);
-            tableHTML += "</tr></thead><tbody id='tableBody'></tbody></table>";
+            tableContainer.innerHTML = filterHTML + "<div id='tables'></div>";
 
-            // Inject elements into the page
-            tableContainer.innerHTML = filterHTML + tableHTML;
+            function renderTables(selectedDate) {
+                const tablesDiv = document.getElementById("tables");
+                tablesDiv.innerHTML = ""; // Clear previous tables
 
-            // Function to populate the table based on selected date
-            function populateTable(selectedDate) {
-                const tableBody = document.getElementById("tableBody");
-                tableBody.innerHTML = ""; // Clear previous content
+                const dayShiftRows = rows.filter(row => row[dateIndex] === selectedDate && row[shiftIndex] === "Day");
+                const nightShiftRows = rows.filter(row => row[dateIndex] === selectedDate && row[shiftIndex] === "Night");
 
-                rows.forEach(row => {
-                    if (row[dateIndex] === selectedDate) {
-                        let rowHTML = "<tr>";
-                        row.forEach(cell => {
-                            rowHTML += `<td>${cell}</td>`;
-                        });
-                        rowHTML += "</tr>";
-                        tableBody.innerHTML += rowHTML;
-                    }
-                });
+                if (dayShiftRows.length > 0) {
+                    tablesDiv.innerHTML += createTableHTML(dayShiftRows, "Day Shift");
+                }
+                if (nightShiftRows.length > 0) {
+                    tablesDiv.innerHTML += createTableHTML(nightShiftRows, "Night Shift");
+                }
             }
 
-            // Default to the first date
-            populateTable(uniqueDates[0]);
+            function createTableHTML(data, shiftName) {
+                let tableHTML = `<h2>${shiftName}</h2><table border='1'><thead><tr>`;
+                headers.forEach(header => tableHTML += `<th>${header}</th>`);
+                tableHTML += "</tr></thead><tbody>";
+
+                data.forEach(row => {
+                    tableHTML += "<tr>";
+                    row.forEach(cell => tableHTML += `<td>${cell}</td>`);
+                    tableHTML += "</tr>";
+                });
+
+                tableHTML += "</tbody></table><br>";
+                return tableHTML;
+            }
+
+            // Initial Render
+            renderTables(defaultDate);
 
             // Handle dropdown change
             document.getElementById("dateFilter").addEventListener("change", function () {
-                populateTable(this.value);
+                renderTables(this.value);
             });
         })
         .catch(error => {
