@@ -10,10 +10,15 @@ async function loadCSV() {
         const csvText = await response.text();
         console.log("CSV content loaded:", csvText);
 
-        const rows = csvText.split("\n").slice(1).map(line => line.split(","));
+        // Parse CSV into rows and ensure valid format
+        const rows = csvText.trim().split("\n").slice(1).map(line => {
+            // Ensure correct column splitting even if values have commas
+            const values = line.match(/(".*?"|[^",]+)(?=\s*,|\s*$)/g).map(v => v.replace(/^"|"$/g, ''));
+            return values.length === 7 ? values : null; // Ensure exactly 7 columns
+        }).filter(row => row !== null);
 
-        // Extract unique dates from the CSV
-        let uniqueDates = [...new Set(rows.map(row => row[6]?.trim()))].sort();
+        // Extract unique dates (column index 6 is Date)
+        let uniqueDates = [...new Set(rows.map(row => row[6]?.trim()))].filter(date => date.match(/^\d{4}-\d{2}-\d{2}$/)).sort();
         console.log("Unique dates found:", uniqueDates);
 
         // Get the container where tables will be added
