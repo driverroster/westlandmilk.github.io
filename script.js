@@ -22,8 +22,8 @@ async function loadCSV() {
 
         // Generate tables for each date dynamically
         uniqueDates.forEach(date => {
-            let dayShifts = rows.filter(row => row[6]?.trim() === date && row[5] === "Day");
-            let nightShifts = rows.filter(row => row[6]?.trim() === date && row[5] === "Night");
+            let dayShifts = rows.filter(row => row[6]?.trim() === date && row[5]?.trim() === "Day");
+            let nightShifts = rows.filter(row => row[6]?.trim() === date && row[5]?.trim() === "Night");
 
             container.innerHTML += `
                 <h2>Shifts for ${date}</h2>
@@ -51,4 +51,5 @@ function createTable(data) {
     return table;
 }
 
+// Run the script after the page loads
 window.onload = loadCSV;
