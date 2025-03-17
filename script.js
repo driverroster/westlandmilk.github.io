@@ -17,22 +17,17 @@ document.addEventListener("DOMContentLoaded", function () {
         .catch(error => console.error("Failed to load CSV:", error));
 
     function processCSV(csvText) {
-        const rows = csvText.trim().split("\n").map(row => row.split(","));
-        const headers = rows[0]; // Extract headers
+        const parsedData = Papa.parse(csvText, { header: true, skipEmptyLines: true });
 
-        console.log("CSV Headers:", headers);
-
-        shiftData = rows.slice(1).map(row => {
-            return {
-                unit: row[0],
-                departureTime: row[1],
-                driverName: row[2],
-                run: row[3],
-                offDriver: row[4],
-                shift: row[5],
-                date: row[6]
-            };
-        });
+        shiftData = parsedData.data.map(row => ({
+            unit: row["Unit"],
+            departureTime: row["Departure Time"],
+            driverName: row["Driver Name"],
+            run: row["Run"],
+            offDriver: row["Driver (on days off)"],
+            shift: row["Shift"],
+            date: row["Date"]
+        }));
 
         const uniqueDates = [...new Set(shiftData.map(entry => entry.date))].sort();
         console.log("Unique dates found:", uniqueDates);
@@ -69,44 +64,46 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function createTable(title, data) {
-        let table = document.createElement("table");
-
-        let thead = document.createElement("thead");
-        thead.innerHTML = `<tr>
-            <th>Unit</th>
-            <th>Departure Time</th>
-            <th>Driver Name</th>
-            <th>Run</th>
-            <th>Driver (on days off)</th>
-        </tr>`;
-        table.appendChild(thead);
-
-        let tbody = document.createElement("tbody");
-        data.forEach(entry => {
-            let row = document.createElement("tr");
-            row.innerHTML = `<td>${entry.unit}</td>
-                             <td>${entry.departureTime}</td>
-                             <td>${entry.driverName}</td>
-                             <td>${entry.run}</td>
-                             <td>${entry.offDriver}</td>`;
-            tbody.appendChild(row);
-        });
-        table.appendChild(tbody);
-
         let section = document.createElement("div");
         section.innerHTML = `<h3>${title}</h3>`;
+
+        let table = document.createElement("table");
+        table.innerHTML = `
+            <thead>
+                <tr>
+                    <th>Unit</th>
+                    <th>Departure Time</th>
+                    <th>Driver Name</th>
+                    <th>Run</th>
+                    <th>Driver (on days off)</th>
+                </tr>
+            </thead>
+            <tbody>
+                ${data.map(entry => `
+                    <tr>
+                        <td>${entry.unit}</td>
+                        <td>${entry.departureTime}</td>
+                        <td>${entry.driverName}</td>
+                        <td>${entry.run}</td>
+                        <td>${entry.offDriver}</td>
+                    </tr>
+                `).join('')}
+            </tbody>
+        `;
         section.appendChild(table);
         return section;
     }
 
     // Dark Mode Toggle
-    darkModeToggle.addEventListener("click", () => {
-        document.body.classList.toggle("dark-mode");
-        localStorage.setItem("dark-mode", document.body.classList.contains("dark-mode"));
-    });
+    if (darkModeToggle) {
+        darkModeToggle.addEventListener("click", () => {
+            document.body.classList.toggle("dark-mode");
+            localStorage.setItem("dark-mode", document.body.classList.contains("dark-mode"));
+        });
 
-    // Load Dark Mode Preference
-    if (localStorage.getItem("dark-mode") === "true") {
-        document.body.classList.add("dark-mode");
+        // Load Dark Mode Preference
+        if (localStorage.getItem("dark-mode") === "true") {
+            document.body.classList.add("dark-mode");
+        }
     }
 });
