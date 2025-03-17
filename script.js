@@ -54,7 +54,7 @@ document.addEventListener("DOMContentLoaded", function () {
             uniqueDates.forEach(date => {
                 filterHTML += `<option value="${date}" ${date === defaultDate ? "selected" : ""}>${date}</option>`;
             });
-            filterHTML += "</select><br><br>";
+            filterHTML += "</select>";
 
             tableContainer.innerHTML = filterHTML + "<div id='tables'></div>";
 
@@ -74,7 +74,7 @@ document.addEventListener("DOMContentLoaded", function () {
             }
 
             function createTableHTML(data, shiftName) {
-                let tableHTML = `<h2>${shiftName}</h2><table border='1'><thead><tr>`;
+                let tableHTML = `<h2>${shiftName}</h2><div class="table-wrapper"><table><thead><tr>`;
                 headers.forEach(header => tableHTML += `<th>${header}</th>`);
                 tableHTML += "</tr></thead><tbody>";
 
@@ -84,7 +84,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     tableHTML += "</tr>";
                 });
 
-                tableHTML += "</tbody></table><br>";
+                tableHTML += "</tbody></table></div><br>";
                 return tableHTML;
             }
 
