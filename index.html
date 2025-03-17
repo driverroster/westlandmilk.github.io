@@ -4,69 +4,102 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Driver Shift Schedule</title>
+    
     <style>
+        /* General Page Styling */
         body {
             font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
             margin: 20px;
-            background-color: #fff;
-            color: #000;
-            transition: background 0.3s, color 0.3s;
+            padding: 0;
+            transition: background-color 0.3s, color 0.3s;
         }
 
-        .dark-mode {
-            background-color: #121212;
-            color: #f0f0f0;
-        }
-
-        h2 {
+        h1 {
             text-align: center;
         }
 
-        select, button {
-            margin: 10px;
-            padding: 10px;
+        /* Dropdown */
+        .controls {
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        select {
+            padding: 8px;
             font-size: 16px;
         }
 
+        button {
+            padding: 8px 12px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+
+        /* Table Styling */
         table {
             width: 100%;
             border-collapse: collapse;
-            margin: 20px 0;
+            margin-bottom: 20px;
         }
 
         th, td {
-            border: 1px solid #ddd;
             padding: 10px;
+            border: 1px solid #ddd;
             text-align: left;
         }
 
         th {
-            background-color: #f4f4f4;
+            background-color: #007bff;
+            color: white;
         }
 
-        .dark-mode th {
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        /* Dark Mode */
+        body.dark-mode {
+            background-color: #222;
+            color: #fff;
+        }
+
+        body.dark-mode table {
+            border-color: #444;
+        }
+
+        body.dark-mode th {
+            background-color: #0056b3;
+        }
+
+        body.dark-mode tr:nth-child(even) {
             background-color: #333;
         }
 
-        button {
-            background: #007BFF;
-            color: white;
-            border: none;
-            cursor: pointer;
-        }
+        /* Responsive */
+        @media (max-width: 600px) {
+            th, td {
+                padding: 5px;
+            }
 
-        .dark-mode button {
-            background: #0056b3;
+            select, button {
+                font-size: 14px;
+                padding: 6px;
+            }
         }
     </style>
 </head>
 <body>
 
-    <h2>Driver Shift Schedule</h2>
+    <h1>Driver Shift Schedule</h1>
 
-    <button id="dark-mode-toggle">Toggle Dark Mode</button>
-    <label for="date-select">Select Date:</label>
-    <select id="date-select"></select>
+    <div class="controls">
+        <label for="date-select">Select Date:</label>
+        <select id="date-select"></select>
+        <button id="dark-mode-toggle">Toggle Dark Mode</button>
+    </div>
 
     <div id="schedule-container"></div>
 

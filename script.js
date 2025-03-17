@@ -18,7 +18,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function processCSV(csvText) {
         const rows = csvText.trim().split("\n").map(row => row.split(","));
-        const headers = rows[0].map(header => header.trim()); // Extract headers & trim spaces
+        const headers = rows[0].map(header => header.trim()); // Extract headers
 
         console.log("CSV Headers:", headers);
 
