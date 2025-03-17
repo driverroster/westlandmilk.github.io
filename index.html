@@ -5,80 +5,52 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Driver Shift Schedule</title>
     <style>
-        /* General Reset */
         body {
             font-family: Arial, sans-serif;
             margin: 20px;
-            padding: 0;
-            background: #f8f8f8;
+            background-color: #f5f5f5;
             color: #333;
-            transition: background 0.3s, color 0.3s;
         }
-
-        /* Dark Mode */
-        body.dark-mode {
-            background: #1e1e1e;
-            color: #fff;
+        .dark-mode {
+            background-color: #222;
+            color: #f5f5f5;
         }
-
-        h1 {
-            text-align: center;
-        }
-
-        .controls {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        select, button {
-            font-size: 16px;
-            padding: 8px;
-            margin: 5px;
-            cursor: pointer;
-        }
-
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-bottom: 20px;
+            margin-top: 20px;
         }
-
         th, td {
             border: 1px solid #ddd;
             padding: 10px;
             text-align: left;
         }
-
         th {
-            background: #4CAF50;
+            background-color: #007bff;
             color: white;
         }
-
-        body.dark-mode th {
-            background: #222;
+        .dark-mode th {
+            background-color: #0056b3;
         }
-
-        tr:nth-child(even) {
-            background: #f2f2f2;
+        select, button {
+            margin: 10px;
+            padding: 8px;
+            font-size: 16px;
         }
-
-        body.dark-mode tr:nth-child(even) {
-            background: #333;
+        .container {
+            max-width: 800px;
+            margin: auto;
         }
     </style>
 </head>
 <body>
-
-    <h1>Driver Shift Schedule</h1>
-
-    <div class="controls">
+    <div class="container">
+        <h2>Driver Shift Schedule</h2>
         <label for="date-select">Select Date:</label>
         <select id="date-select"></select>
         <button id="dark-mode-toggle">Toggle Dark Mode</button>
+        <div id="schedule-container"></div>
     </div>
-
-    <div id="schedule-container"></div>
-
     <script src="script.js"></script>
 </body>
 </html>
