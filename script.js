@@ -10,17 +10,18 @@ async function loadCSV() {
         const csvText = await response.text();
         console.log("CSV content loaded:", csvText);
 
-        // Parse CSV into rows and ensure valid format
+        // Parse CSV correctly (ignoring commas inside quotes)
         const rows = csvText.trim().split("\n").slice(1).map(line => {
-            // Ensure correct column splitting even if values have commas
-            const values = line.match(/(".*?"|[^",]+)(?=\s*,|\s*$)/g).map(v => v.replace(/^"|"$/g, ''));
-            return values.length === 7 ? values : null; // Ensure exactly 7 columns
+            const values = line.match(/(".*?"|[^",]+)(?=\s*,|\s*$)/g)
+                .map(v => v.replace(/^"|"$/g, '')); // Remove surrounding quotes
+
+            return values.length === 7 ? values : null; // Ensure correct columns
         }).filter(row => row !== null);
 
-        // Debug: Print first few rows
+        // Debugging: Check the first few parsed rows
         console.log("Parsed CSV rows:", rows.slice(0, 5));
 
-        // Ensure the correct column index is used for Date (last column)
+        // Extract unique dates from the **correct column (index 6)**
         let uniqueDates = [...new Set(rows.map(row => row[6]?.trim()))]
             .filter(date => date.match(/^\d{4}-\d{2}-\d{2}$/)) // Ensure valid date format
             .sort();
