@@ -1,35 +1,43 @@
 async function loadCSV() {
-    const response = await fetch('shifts.csv');
-    const csvText = await response.text();
-    const rows = csvText.split("\n").slice(1).map(line => line.split(","));
+    try {
+        console.log("Fetching CSV file...");
+        const response = await fetch('shifts.csv');
 
-    // Get today's and tomorrow's dates
-    const today = new Date().toISOString().split("T")[0];
-    const tomorrow = new Date();
-    tomorrow.setDate(tomorrow.getDate() + 1);
-    const tomorrowStr = tomorrow.toISOString().split("T")[0];
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
 
-    // Categorize data into shifts
-    let todayDayShift = [];
-    let todayNightShift = [];
-    let tomorrowDayShift = [];
-    let tomorrowNightShift = [];
+        const csvText = await response.text();
+        console.log("CSV content loaded:", csvText);
 
-    rows.forEach(row => {
-        if (row.length < 7) return; // Skip invalid rows
-        const [unit, time, driver, run, off, shift, date] = row.map(item => item.trim());
+        const rows = csvText.split("\n").slice(1).map(line => line.split(","));
 
-        if (date === today && shift === "Day") todayDayShift.push(row);
-        if (date === today && shift === "Night") todayNightShift.push(row);
-        if (date === tomorrowStr && shift === "Day") tomorrowDayShift.push(row);
-        if (date === tomorrowStr && shift === "Night") tomorrowNightShift.push(row);
-    });
+        // Extract unique dates from the CSV
+        let uniqueDates = [...new Set(rows.map(row => row[6]?.trim()))].sort();
+        console.log("Unique dates found:", uniqueDates);
 
-    // Display tables
-    document.getElementById("today-day-shift").innerHTML = createTable(todayDayShift);
-    document.getElementById("today-night-shift").innerHTML = createTable(todayNightShift);
-    document.getElementById("tomorrow-day-shift").innerHTML = createTable(tomorrowDayShift);
-    document.getElementById("tomorrow-night-shift").innerHTML = createTable(tomorrowNightShift);
+        // Get the container where tables will be added
+        const container = document.getElementById("schedule-container");
+        container.innerHTML = ""; // Clear previous content
+
+        // Generate tables for each date dynamically
+        uniqueDates.forEach(date => {
+            let dayShifts = rows.filter(row => row[6]?.trim() === date && row[5] === "Day");
+            let nightShifts = rows.filter(row => row[6]?.trim() === date && row[5] === "Night");
+
+            container.innerHTML += `
+                <h2>Shifts for ${date}</h2>
+                <h3>Day Shift</h3>
+                ${createTable(dayShifts)}
+                <h3>Night Shift</h3>
+                ${createTable(nightShifts)}
+            `;
+        });
+
+        console.log("Schedule updated successfully.");
+    } catch (error) {
+        console.error("Error loading CSV:", error);
+    }
 }
 
 function createTable(data) {
