@@ -1,102 +1,100 @@
 document.addEventListener("DOMContentLoaded", function () {
-    console.log("[Log] Fetching CSV file...");
-
     const tableContainer = document.getElementById("table-container");
-    if (!tableContainer) {
-        console.error("[Error] No element found with id 'table-container'. Ensure your HTML contains <div id='table-container'></div>");
-        return;
+    const dateSelect = document.getElementById("date-select");
+    const darkModeToggle = document.querySelector(".toggle-btn");
+
+    // Auto Dark Mode Handling
+    const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+    const savedDarkMode = localStorage.getItem("darkMode");
+
+    if (savedDarkMode === "true" || (savedDarkMode === null && prefersDark)) {
+        document.body.classList.add("dark-mode");
     }
 
-    fetch("shifts.csv")
-        .then(response => {
-            if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
-            return response.text();
-        })
-        .then(csvContent => {
-            console.log("[Log] CSV content loaded.");
+    darkModeToggle.addEventListener("click", function () {
+        document.body.classList.toggle("dark-mode");
+        localStorage.setItem("darkMode", document.body.classList.contains("dark-mode"));
+    });
 
-            // Parse CSV: Handle quoted fields correctly
-            const rows = csvContent.trim().split("\n").map(row => {
-                return row.match(/(".*?"|[^",]+)(?=\s*,|\s*$)/g).map(cell => cell.replace(/^"|"$/g, '').trim());
+    console.log("Fetching CSV file...");
+    fetch("schedule.csv")
+        .then(response => response.text())
+        .then(csvText => {
+            console.log("CSV content loaded:");
+            console.log(csvText);
+
+            const rows = csvText.split("\n").map(row => row.split(","));
+            const headers = rows.shift().map(header => header.trim());
+            console.log("CSV Headers:", headers);
+
+            const data = rows.map(row => {
+                return headers.reduce((obj, header, index) => {
+                    obj[header] = row[index] ? row[index].trim() : "";
+                    return obj;
+                }, {});
             });
 
-            if (rows.length < 2) {
-                console.error("[Error] CSV file is empty or improperly formatted.");
-                return;
-            }
+            // Find unique dates for filtering
+            const uniqueDates = [...new Set(data.map(entry => entry.Date))].filter(date => date);
+            console.log("Unique dates found:", uniqueDates);
 
-            const headers = rows.shift();
-            console.log("[Log] CSV Headers:", headers);
-
-            const dateIndex = headers.indexOf("Date");
-            const shiftIndex = headers.indexOf("Shift");
-            if (dateIndex === -1 || shiftIndex === -1) {
-                console.error("[Error] Missing 'Date' or 'Shift' column.");
-                return;
-            }
-
-            // Extract and sort unique dates
-            const uniqueDates = [...new Set(rows.map(row => row[dateIndex]))].filter(Boolean).sort();
-            console.log("[Log] Unique dates found:", uniqueDates);
-
-            if (uniqueDates.length === 0) {
-                console.error("[Error] No valid dates found in the CSV.");
-                return;
-            }
-
-            // Default to today's schedule
-            const today = new Date().toISOString().split("T")[0];
-            const defaultDate = uniqueDates.includes(today) ? today : uniqueDates[0];
-
-            // Create date filter dropdown
-            let filterHTML = "<label for='dateFilter'>Select Date: </label>";
-            filterHTML += "<select id='dateFilter'>";
+            // Populate the date dropdown
             uniqueDates.forEach(date => {
-                filterHTML += `<option value="${date}" ${date === defaultDate ? "selected" : ""}>${date}</option>`;
+                const option = document.createElement("option");
+                option.value = date;
+                option.textContent = date;
+                dateSelect.appendChild(option);
             });
-            filterHTML += "</select>";
 
-            tableContainer.innerHTML = filterHTML + "<div id='tables'></div>";
+            // Function to render table based on selected date
+            function renderTable(selectedDate) {
+                tableContainer.innerHTML = ""; // Clear previous table
+                const filteredData = data.filter(entry => entry.Date === selectedDate);
 
-            function renderTables(selectedDate) {
-                const tablesDiv = document.getElementById("tables");
-                tablesDiv.innerHTML = ""; // Clear previous tables
-
-                const dayShiftRows = rows.filter(row => row[dateIndex] === selectedDate && row[shiftIndex] === "Day");
-                const nightShiftRows = rows.filter(row => row[dateIndex] === selectedDate && row[shiftIndex] === "Night");
-
-                if (dayShiftRows.length > 0) {
-                    tablesDiv.innerHTML += createTableHTML(dayShiftRows, "Day Shift");
+                if (filteredData.length === 0) {
+                    tableContainer.innerHTML = "<p>No data available for this date.</p>";
+                    return;
                 }
-                if (nightShiftRows.length > 0) {
-                    tablesDiv.innerHTML += createTableHTML(nightShiftRows, "Night Shift");
-                }
-            }
 
-            function createTableHTML(data, shiftName) {
-                let tableHTML = `<h2>${shiftName}</h2><div class="table-wrapper"><table><thead><tr>`;
-                headers.forEach(header => tableHTML += `<th>${header}</th>`);
-                tableHTML += "</tr></thead><tbody>";
+                const table = document.createElement("table");
+                table.classList.add("schedule-table");
 
-                data.forEach(row => {
-                    tableHTML += "<tr>";
-                    row.forEach(cell => tableHTML += `<td>${cell}</td>`);
-                    tableHTML += "</tr>";
+                // Table Header
+                const thead = document.createElement("thead");
+                const headerRow = document.createElement("tr");
+                headers.forEach(header => {
+                    const th = document.createElement("th");
+                    th.textContent = header;
+                    headerRow.appendChild(th);
+                });
+                thead.appendChild(headerRow);
+                table.appendChild(thead);
+
+                // Table Body
+                const tbody = document.createElement("tbody");
+                filteredData.forEach(entry => {
+                    const row = document.createElement("tr");
+                    headers.forEach(header => {
+                        const td = document.createElement("td");
+                        td.textContent = entry[header];
+                        row.appendChild(td);
+                    });
+                    tbody.appendChild(row);
                 });
 
-                tableHTML += "</tbody></table></div><br>";
-                return tableHTML;
+                table.appendChild(tbody);
+                tableContainer.appendChild(table);
             }
 
             // Initial Render
-            renderTables(defaultDate);
+            if (uniqueDates.length > 0) {
+                renderTable(uniqueDates[0]);
+            }
 
-            // Handle dropdown change
-            document.getElementById("dateFilter").addEventListener("change", function () {
-                renderTables(this.value);
+            // Change event for date selection
+            dateSelect.addEventListener("change", function () {
+                renderTable(this.value);
             });
         })
-        .catch(error => {
-            console.error("[Error] Failed to load CSV:", error);
-        });
+        .catch(error => console.error("Failed to load CSV:", error));
 });
