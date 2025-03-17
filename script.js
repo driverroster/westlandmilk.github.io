@@ -17,30 +17,36 @@ document.addEventListener("DOMContentLoaded", function () {
             return response.text();
         })
         .then(csvContent => {
-            console.log("[Log] CSV content loaded:", csvContent);
+            console.log("[Log] CSV content loaded.");
 
-            // Parse CSV data
-            const rows = csvContent.trim().split("\n").map(row => row.split(","));
-            if (rows.length === 0) {
-                console.error("[Error] CSV file appears empty.");
+            // Parse CSV content into rows
+            const rows = csvContent.trim().split("\n").map(row => row.split(",").map(cell => cell.trim()));
+            if (rows.length < 2) {
+                console.error("[Error] CSV file is empty or improperly formatted.");
                 return;
             }
 
-            // Extract headers and log them
-            const headers = rows.shift().map(header => header.trim());
+            // Extract headers & data rows
+            const headers = rows.shift();
             console.log("[Log] CSV Headers:", headers);
 
-            // Extract unique dates for filtering
-            const dateIndex = headers.indexOf("Date");
+            // Find the "Date" column index
+            const dateIndex = headers.findIndex(header => header.toLowerCase() === "date");
             if (dateIndex === -1) {
-                console.error("[Error] CSV does not contain a 'Date' column.");
+                console.error("[Error] 'Date' column not found in CSV.");
                 return;
             }
 
-            const uniqueDates = [...new Set(rows.map(row => row[dateIndex].trim()))];
+            // Extract unique dates & sort them
+            const uniqueDates = [...new Set(rows.map(row => row[dateIndex]))].filter(Boolean).sort();
             console.log("[Log] Unique dates found:", uniqueDates);
 
-            // Create dropdown filter for dates
+            if (uniqueDates.length === 0) {
+                console.error("[Error] No valid dates found in the CSV.");
+                return;
+            }
+
+            // Create date filter dropdown
             let filterHTML = "<label for='dateFilter'>Select Date: </label>";
             filterHTML += "<select id='dateFilter'>";
             uniqueDates.forEach(date => {
@@ -48,26 +54,24 @@ document.addEventListener("DOMContentLoaded", function () {
             });
             filterHTML += "</select>";
 
-            // Create table and populate headers
+            // Create the table structure
             let tableHTML = "<table border='1'><thead><tr>";
-            headers.forEach(header => {
-                tableHTML += `<th>${header}</th>`;
-            });
+            headers.forEach(header => tableHTML += `<th>${header}</th>`);
             tableHTML += "</tr></thead><tbody id='tableBody'></tbody></table>";
 
-            // Insert the filter and table into the page
+            // Inject elements into the page
             tableContainer.innerHTML = filterHTML + tableHTML;
 
             // Function to populate the table based on selected date
             function populateTable(selectedDate) {
                 const tableBody = document.getElementById("tableBody");
-                tableBody.innerHTML = ""; // Clear existing rows
+                tableBody.innerHTML = ""; // Clear previous content
 
                 rows.forEach(row => {
-                    if (row[dateIndex].trim() === selectedDate) {
+                    if (row[dateIndex] === selectedDate) {
                         let rowHTML = "<tr>";
                         row.forEach(cell => {
-                            rowHTML += `<td>${cell.trim()}</td>`;
+                            rowHTML += `<td>${cell}</td>`;
                         });
                         rowHTML += "</tr>";
                         tableBody.innerHTML += rowHTML;
@@ -75,10 +79,10 @@ document.addEventListener("DOMContentLoaded", function () {
                 });
             }
 
-            // Default to the first date available
+            // Default to the first date
             populateTable(uniqueDates[0]);
 
-            // Add event listener to dropdown
+            // Handle dropdown change
             document.getElementById("dateFilter").addEventListener("change", function () {
                 populateTable(this.value);
             });
