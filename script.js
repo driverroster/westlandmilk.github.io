@@ -23,15 +23,16 @@ document.addEventListener("DOMContentLoaded", function () {
         console.log("CSV Headers:", headers);
 
         shiftData = rows.slice(1).map(row => ({
+            date: row[6]?.trim(),
+            shift: row[5]?.trim(),
             unit: row[0]?.trim(),
             departureTime: row[1]?.trim(),
             driverName: row[2]?.trim(),
             run: row[3]?.trim(),
-            offDriver: row[4]?.trim(),
-            shift: row[5]?.trim(),
-            date: row[6]?.trim()
+            offDriver: row[4]?.trim()
         }));
 
+        // Get Unique Dates for Selection
         const uniqueDates = [...new Set(shiftData.map(entry => entry.date))].sort();
         console.log("Unique dates found:", uniqueDates);
 
