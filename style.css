@@ -1,7 +1,8 @@
 /* General Styles */
 body {
     font-family: "Arial", sans-serif;
-    margin: 20px;
+    margin: 0;
+    padding: 20px;
     background-color: #f5f5f5;
     color: #333;
     transition: background-color 0.3s, color 0.3s;
@@ -15,10 +16,10 @@ body {
 
 /* Container */
 .container {
-    max-width: 1000px;
+    max-width: 1200px;
     margin: auto;
-    text-align: center;
     padding: 20px;
+    text-align: center;
     border-radius: 10px;
     background: white;
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
@@ -30,13 +31,19 @@ body {
 
 /* Header */
 h2 {
-    font-size: 24px;
-    margin-bottom: 20px;
+    font-size: 28px;
+    margin-bottom: 15px;
 }
 
 /* Controls */
+.controls {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
 select, button {
-    margin: 10px;
     padding: 12px;
     font-size: 16px;
     border: 1px solid #ccc;
@@ -60,9 +67,16 @@ select {
     color: #fff;
 }
 
+/* Table Container (Scrollable on Small Screens) */
+.table-container {
+    overflow-x: auto;
+    max-width: 100%;
+}
+
 /* Table Styling */
 table {
     width: 100%;
+    min-width: 600px; /* Ensures horizontal scroll on small screens */
     border-collapse: collapse;
     margin-top: 20px;
     background: white;
@@ -76,13 +90,13 @@ table {
 
 th, td {
     border: 1px solid #ddd;
-    padding: 14px;
+    padding: 12px;
     text-align: left;
+    font-size: 16px;
 }
 th {
     background-color: #007bff;
     color: white;
-    font-size: 16px;
     text-transform: uppercase;
 }
 .dark-mode th {
@@ -119,9 +133,9 @@ h3 {
 }
 
 /* Responsive Design */
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
     .container {
-        width: 95%;
+        width: 90%;
         padding: 15px;
     }
 
@@ -130,11 +144,53 @@ h3 {
     }
 
     select, button {
+        font-size: 14px;
+        padding: 10px;
+    }
+}
+
+@media (max-width: 768px) {
+    .controls {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    select, button {
         width: 100%;
         margin-top: 5px;
     }
 
+    table {
+        font-size: 12px;
+    }
+
     th, td {
+        padding: 8px;
+    }
+
+    h2 {
+        font-size: 22px;
+    }
+}
+
+@media (max-width: 480px) {
+    body {
         padding: 10px;
+    }
+
+    .container {
+        padding: 10px;
+    }
+
+    table {
+        font-size: 10px;
+    }
+
+    th, td {
+        padding: 6px;
+    }
+
+    h2 {
+        font-size: 20px;
     }
 }
