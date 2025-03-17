@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", function () {
     console.log("[Log] Fetching CSV file...");
 
-    fetch("your_data.csv") // Replace with the actual CSV file path
+    fetch("shifts.csv") // Replace with the actual CSV file path
         .then(response => response.text())
         .then(data => {
             console.log("[Log] CSV content loaded:");
