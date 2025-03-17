@@ -1,67 +1,89 @@
 document.addEventListener("DOMContentLoaded", function () {
     console.log("[Log] Fetching CSV file...");
 
-    fetch("shifts.csv") // Replace with the actual CSV file path
-        .then(response => response.text())
-        .then(data => {
-            console.log("[Log] CSV content loaded:");
-            console.log(data);
+    // Ensure the target container exists
+    const tableContainer = document.getElementById("table-container");
+    if (!tableContainer) {
+        console.error("[Error] No element found with id 'table-container'. Ensure your HTML contains <div id='table-container'></div>");
+        return;
+    }
 
-            const rows = data.trim().split("\n").map(line => line.split(",").map(cell => cell.trim()));
-            
-            // Extract header row
-            const headers = rows.shift();
+    // Fetch CSV file
+    fetch("shifts.csv")
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            return response.text();
+        })
+        .then(csvContent => {
+            console.log("[Log] CSV content loaded:", csvContent);
+
+            // Parse CSV data
+            const rows = csvContent.trim().split("\n").map(row => row.split(","));
+            if (rows.length === 0) {
+                console.error("[Error] CSV file appears empty.");
+                return;
+            }
+
+            // Extract headers and log them
+            const headers = rows.shift().map(header => header.trim());
             console.log("[Log] CSV Headers:", headers);
 
-            // Extract unique dates correctly
-            let uniqueDates = [...new Set(rows.map(row => row[6]?.trim()))]
-                .filter(date => date.match(/^\d{4}-\d{2}-\d{2}$/)) // Ensure valid date format
-                .sort();
+            // Extract unique dates for filtering
+            const dateIndex = headers.indexOf("Date");
+            if (dateIndex === -1) {
+                console.error("[Error] CSV does not contain a 'Date' column.");
+                return;
+            }
 
+            const uniqueDates = [...new Set(rows.map(row => row[dateIndex].trim()))];
             console.log("[Log] Unique dates found:", uniqueDates);
 
-            updateScheduleTable(rows, uniqueDates);
-        })
-        .catch(error => console.error("[Error] Failed to load CSV:", error));
-});
-
-function updateScheduleTable(rows, uniqueDates) {
-    const tableContainer = document.getElementById("scheduleTable");
-    tableContainer.innerHTML = ""; // Clear previous content
-
-    uniqueDates.forEach(date => {
-        let tableHTML = `<h3>Schedule for ${date}</h3>`;
-        tableHTML += `<table border="1">
-            <thead>
-                <tr>
-                    <th>Unit</th>
-                    <th>Departure Time</th>
-                    <th>Driver Name</th>
-                    <th>Run</th>
-                    <th>Driver (on days off)</th>
-                    <th>Shift</th>
-                    <th>Date</th>
-                </tr>
-            </thead>
-            <tbody>`;
-
-        rows
-            .filter(row => row[6] === date) // Filter by date column
-            .forEach(row => {
-                tableHTML += `<tr>
-                    <td>${row[0]}</td>
-                    <td>${row[1]}</td>
-                    <td>${row[2]}</td>
-                    <td>${row[3]}</td>
-                    <td>${row[4]}</td>
-                    <td>${row[5]}</td>
-                    <td>${row[6]}</td>
-                </tr>`;
+            // Create dropdown filter for dates
+            let filterHTML = "<label for='dateFilter'>Select Date: </label>";
+            filterHTML += "<select id='dateFilter'>";
+            uniqueDates.forEach(date => {
+                filterHTML += `<option value="${date}">${date}</option>`;
             });
+            filterHTML += "</select>";
 
-        tableHTML += "</tbody></table><br>";
-        tableContainer.innerHTML += tableHTML;
-    });
+            // Create table and populate headers
+            let tableHTML = "<table border='1'><thead><tr>";
+            headers.forEach(header => {
+                tableHTML += `<th>${header}</th>`;
+            });
+            tableHTML += "</tr></thead><tbody id='tableBody'></tbody></table>";
 
-    console.log("[Log] Schedule updated successfully.");
-}
+            // Insert the filter and table into the page
+            tableContainer.innerHTML = filterHTML + tableHTML;
+
+            // Function to populate the table based on selected date
+            function populateTable(selectedDate) {
+                const tableBody = document.getElementById("tableBody");
+                tableBody.innerHTML = ""; // Clear existing rows
+
+                rows.forEach(row => {
+                    if (row[dateIndex].trim() === selectedDate) {
+                        let rowHTML = "<tr>";
+                        row.forEach(cell => {
+                            rowHTML += `<td>${cell.trim()}</td>`;
+                        });
+                        rowHTML += "</tr>";
+                        tableBody.innerHTML += rowHTML;
+                    }
+                });
+            }
+
+            // Default to the first date available
+            populateTable(uniqueDates[0]);
+
+            // Add event listener to dropdown
+            document.getElementById("dateFilter").addEventListener("change", function () {
+                populateTable(this.value);
+            });
+        })
+        .catch(error => {
+            console.error("[Error] Failed to load CSV:", error);
+        });
+});
