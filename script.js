@@ -21,22 +21,23 @@ document.addEventListener("DOMContentLoaded", function () {
             .catch(error => console.error("Error loading CSV:", error));
     }
 
-    // Parse CSV into structured data
+    // Parse CSV properly, handling quoted fields
     function parseCSV(csv) {
-        const rows = csv.split("\n").map(row => row.split(","));
-        const headers = rows.shift(); // Remove header row
+        const rows = csv.split("\n").map(row => row.match(/(?:\"([^\"]+)\"|([^,]+)|,)/g));
+        if (!rows.length) return [];
+
+        const headers = rows.shift().map(header => header.replace(/"/g, "").trim());
 
         return rows.map(row => {
-            return {
-                Unit: row[0],
-                DepartureTime: row[1],
-                DriverName: row[2],
-                Run: row[3],
-                DriverOff: row[4],
-                Shift: row[5],
-                Date: row[6]
-            };
-        });
+            if (!row || row.length < headers.length) return null;
+
+            const entry = {};
+            headers.forEach((header, index) => {
+                let value = row[index]?.replace(/^"|"$/g, ""); // Remove leading/trailing quotes
+                entry[header] = value ? value.trim() : "";
+            });
+            return entry;
+        }).filter(row => row); // Remove null values
     }
 
     // Populate date dropdown
@@ -54,10 +55,10 @@ document.addEventListener("DOMContentLoaded", function () {
         tableBody.innerHTML = filteredData.map(item => `
             <tr>
                 <td>${item.Unit}</td>
-                <td>${item.DepartureTime}</td>
-                <td>${item.DriverName}</td>
+                <td>${item["Departure Time"]}</td>
+                <td>${item["Driver Name"]}</td>
                 <td>${item.Run}</td>
-                <td>${item.DriverOff}</td>
+                <td>${item["Driver (on days off)"]}</td>
                 <td>${item.Shift}</td>
                 <td>${item.Date}</td>
             </tr>
