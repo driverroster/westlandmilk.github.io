@@ -1,87 +1,112 @@
 document.addEventListener("DOMContentLoaded", function () {
-    const darkModeToggle = document.getElementById("dark-mode-toggle");
-    const tableBody = document.getElementById("table-body");
+    console.log("Fetching CSV file...");
+
     const dateSelect = document.getElementById("date-select");
+    const scheduleContainer = document.getElementById("schedule-container");
+    const darkModeToggle = document.getElementById("dark-mode-toggle");
 
-    let scheduleData = [];
+    let shiftData = []; // Store CSV data
 
-    // Load CSV data
-    function loadCSV() {
-        console.log("Fetching CSV file...");
-        fetch("shifts.csv")
-            .then(response => response.text())
-            .then(data => {
-                console.log("CSV content loaded:");
-                console.log(data);
+    // Fetch and process the CSV file
+    fetch("shifts.csv")
+        .then(response => response.text())
+        .then(csvText => {
+            console.log("CSV content loaded:");
+            processCSV(csvText);
+        })
+        .catch(error => console.error("Failed to load CSV:", error));
 
-                scheduleData = parseCSV(data);
-                populateDateDropdown();
-                updateTable();
-            })
-            .catch(error => console.error("Error loading CSV:", error));
-    }
+    function processCSV(csvText) {
+        const rows = csvText.trim().split("\n").map(row => row.split(","));
+        const headers = rows[0]; // Extract headers
 
-    // Parse CSV properly, handling quoted fields
-    function parseCSV(csv) {
-        const rows = csv.split("\n").map(row => row.match(/(?:\"([^\"]+)\"|([^,]+)|,)/g));
-        if (!rows.length) return [];
+        console.log("CSV Headers:", headers);
 
-        const headers = rows.shift().map(header => header.replace(/"/g, "").trim());
+        shiftData = rows.slice(1).map(row => {
+            return {
+                unit: row[0],
+                departureTime: row[1],
+                driverName: row[2],
+                run: row[3],
+                offDriver: row[4],
+                shift: row[5],
+                date: row[6]
+            };
+        });
 
-        return rows.map(row => {
-            if (!row || row.length < headers.length) return null;
+        const uniqueDates = [...new Set(shiftData.map(entry => entry.date))].sort();
+        console.log("Unique dates found:", uniqueDates);
 
-            const entry = {};
-            headers.forEach((header, index) => {
-                let value = row[index]?.replace(/^"|"$/g, ""); // Remove leading/trailing quotes
-                entry[header] = value ? value.trim() : "";
+        if (uniqueDates.length > 0) {
+            uniqueDates.forEach(date => {
+                let option = document.createElement("option");
+                option.value = date;
+                option.textContent = date;
+                dateSelect.appendChild(option);
             });
-            return entry;
-        }).filter(row => row); // Remove null values
+
+            updateSchedule(uniqueDates[0]); // Load first date by default
+        }
+
+        dateSelect.addEventListener("change", () => {
+            updateSchedule(dateSelect.value);
+        });
     }
 
-    // Populate date dropdown
-    function populateDateDropdown() {
-        const uniqueDates = [...new Set(scheduleData.map(item => item.Date))].sort();
-        dateSelect.innerHTML = uniqueDates.map(date => `<option value="${date}">${date}</option>`).join("");
-        dateSelect.addEventListener("change", updateTable);
-    }
+    function updateSchedule(selectedDate) {
+        console.log("Updating schedule for:", selectedDate);
+        scheduleContainer.innerHTML = ""; // Clear existing tables
 
-    // Update table with selected date
-    function updateTable() {
-        const selectedDate = dateSelect.value;
-        const filteredData = scheduleData.filter(item => item.Date === selectedDate);
+        let dayShift = shiftData.filter(entry => entry.date === selectedDate && entry.shift === "Day");
+        let nightShift = shiftData.filter(entry => entry.date === selectedDate && entry.shift === "Night");
 
-        tableBody.innerHTML = filteredData.map(item => `
-            <tr>
-                <td>${item.Unit}</td>
-                <td>${item["Departure Time"]}</td>
-                <td>${item["Driver Name"]}</td>
-                <td>${item.Run}</td>
-                <td>${item["Driver (on days off)"]}</td>
-                <td>${item.Shift}</td>
-                <td>${item.Date}</td>
-            </tr>
-        `).join("");
-    }
-
-    // Dark mode handling
-    function applyDarkModePreference() {
-        const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-        const savedDarkMode = localStorage.getItem("darkMode");
-
-        if (savedDarkMode === "enabled" || (savedDarkMode === null && prefersDark)) {
-            document.body.classList.add("dark-mode");
+        if (dayShift.length > 0) {
+            scheduleContainer.appendChild(createTable("Day Shift", dayShift));
+        }
+        if (nightShift.length > 0) {
+            scheduleContainer.appendChild(createTable("Night Shift", nightShift));
         }
     }
 
-    applyDarkModePreference();
+    function createTable(title, data) {
+        let table = document.createElement("table");
 
-    darkModeToggle.addEventListener("click", function () {
+        let thead = document.createElement("thead");
+        thead.innerHTML = `<tr>
+            <th>Unit</th>
+            <th>Departure Time</th>
+            <th>Driver Name</th>
+            <th>Run</th>
+            <th>Driver (on days off)</th>
+        </tr>`;
+        table.appendChild(thead);
+
+        let tbody = document.createElement("tbody");
+        data.forEach(entry => {
+            let row = document.createElement("tr");
+            row.innerHTML = `<td>${entry.unit}</td>
+                             <td>${entry.departureTime}</td>
+                             <td>${entry.driverName}</td>
+                             <td>${entry.run}</td>
+                             <td>${entry.offDriver}</td>`;
+            tbody.appendChild(row);
+        });
+        table.appendChild(tbody);
+
+        let section = document.createElement("div");
+        section.innerHTML = `<h3>${title}</h3>`;
+        section.appendChild(table);
+        return section;
+    }
+
+    // Dark Mode Toggle
+    darkModeToggle.addEventListener("click", () => {
         document.body.classList.toggle("dark-mode");
-        localStorage.setItem("darkMode", document.body.classList.contains("dark-mode") ? "enabled" : "disabled");
+        localStorage.setItem("dark-mode", document.body.classList.contains("dark-mode"));
     });
 
-    // Initial load
-    loadCSV();
+    // Load Dark Mode Preference
+    if (localStorage.getItem("dark-mode") === "true") {
+        document.body.classList.add("dark-mode");
+    }
 });

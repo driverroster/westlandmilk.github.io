@@ -5,135 +5,72 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Driver Shift Schedule</title>
     <style>
-        /* General Reset */
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: Arial, sans-serif;
-        }
-
         body {
-            background-color: #f4f4f4;
-            color: #333;
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #fff;
+            color: #000;
             transition: background 0.3s, color 0.3s;
         }
 
         .dark-mode {
             background-color: #121212;
-            color: #ffffff;
+            color: #f0f0f0;
         }
 
-        .container {
-            max-width: 1200px;
-            margin: 20px auto;
-            padding: 20px;
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .dark-mode .container {
-            background: #1e1e1e;
-            box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.1);
-        }
-
-        h1 {
+        h2 {
             text-align: center;
-            margin-bottom: 20px;
         }
 
-        select {
-            display: block;
-            width: 100%;
+        select, button {
+            margin: 10px;
             padding: 10px;
-            margin-bottom: 20px;
-            border-radius: 5px;
-            border: 1px solid #ccc;
+            font-size: 16px;
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
+            margin: 20px 0;
         }
 
         th, td {
+            border: 1px solid #ddd;
             padding: 10px;
             text-align: left;
-            border-bottom: 1px solid #ddd;
         }
 
         th {
-            background: #007bff;
-            color: white;
+            background-color: #f4f4f4;
         }
 
         .dark-mode th {
-            background: #0056b3;
+            background-color: #333;
         }
 
-        tr:hover {
-            background: rgba(0, 123, 255, 0.1);
-        }
-
-        .dark-mode tr:hover {
-            background: rgba(0, 123, 255, 0.2);
-        }
-
-        .toggle-btn {
-            display: block;
-            width: 200px;
-            margin: 10px auto;
-            padding: 10px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            background: #007bff;
+        button {
+            background: #007BFF;
             color: white;
-            font-size: 16px;
+            border: none;
+            cursor: pointer;
         }
 
-        .dark-mode .toggle-btn {
+        .dark-mode button {
             background: #0056b3;
-        }
-
-        @media (max-width: 768px) {
-            th, td {
-                font-size: 14px;
-                padding: 8px;
-            }
-
-            .toggle-btn {
-                width: 100%;
-            }
         }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <h1>Driver Shift Schedule</h1>
-        <button id="dark-mode-toggle" class="toggle-btn">Toggle Dark Mode</button>
-        <label for="date-select">Select Date:</label>
-        <select id="date-select"></select>
-        <table>
-            <thead>
-                <tr>
-                    <th>Unit</th>
-                    <th>Departure Time</th>
-                    <th>Driver Name</th>
-                    <th>Run</th>
-                    <th>Driver (on days off)</th>
-                    <th>Shift</th>
-                    <th>Date</th>
-                </tr>
-            </thead>
-            <tbody id="table-body">
-                <!-- Data will be inserted here -->
-            </tbody>
-        </table>
-    </div>
+    <h2>Driver Shift Schedule</h2>
+
+    <button id="dark-mode-toggle">Toggle Dark Mode</button>
+    <label for="date-select">Select Date:</label>
+    <select id="date-select"></select>
+
+    <div id="schedule-container"></div>
 
     <script src="script.js"></script>
+
 </body>
 </html>
