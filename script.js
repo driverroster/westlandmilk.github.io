@@ -1,69 +1,67 @@
-async function loadCSV() {
-    try {
-        console.log("Fetching CSV file...");
-        const response = await fetch('shifts.csv');
+document.addEventListener("DOMContentLoaded", function () {
+    console.log("[Log] Fetching CSV file...");
 
-        if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
-        }
+    fetch("your_data.csv") // Replace with the actual CSV file path
+        .then(response => response.text())
+        .then(data => {
+            console.log("[Log] CSV content loaded:");
+            console.log(data);
 
-        const csvText = await response.text();
-        console.log("CSV content loaded:", csvText);
+            const rows = data.trim().split("\n").map(line => line.split(",").map(cell => cell.trim()));
+            
+            // Extract header row
+            const headers = rows.shift();
+            console.log("[Log] CSV Headers:", headers);
 
-        // Parse CSV correctly (ignoring commas inside quotes)
-        const rows = csvText.trim().split("\n").slice(1).map(line => {
-            const values = line.match(/(".*?"|[^",]+)(?=\s*,|\s*$)/g)
-                .map(v => v.replace(/^"|"$/g, '')); // Remove surrounding quotes
+            // Extract unique dates correctly
+            let uniqueDates = [...new Set(rows.map(row => row[6]?.trim()))]
+                .filter(date => date.match(/^\d{4}-\d{2}-\d{2}$/)) // Ensure valid date format
+                .sort();
 
-            return values.length === 7 ? values : null; // Ensure correct columns
-        }).filter(row => row !== null);
+            console.log("[Log] Unique dates found:", uniqueDates);
 
-        // Debugging: Check the first few parsed rows
-        console.log("Parsed CSV rows:", rows.slice(0, 5));
+            updateScheduleTable(rows, uniqueDates);
+        })
+        .catch(error => console.error("[Error] Failed to load CSV:", error));
+});
 
-        // Extract unique dates from the **correct column (index 6)**
-        let uniqueDates = [...new Set(rows.map(row => row[6]?.trim()))]
-            .filter(date => date.match(/^\d{4}-\d{2}-\d{2}$/)) // Ensure valid date format
-            .sort();
+function updateScheduleTable(rows, uniqueDates) {
+    const tableContainer = document.getElementById("scheduleTable");
+    tableContainer.innerHTML = ""; // Clear previous content
 
-        console.log("Extracted Unique Dates:", uniqueDates);
+    uniqueDates.forEach(date => {
+        let tableHTML = `<h3>Schedule for ${date}</h3>`;
+        tableHTML += `<table border="1">
+            <thead>
+                <tr>
+                    <th>Unit</th>
+                    <th>Departure Time</th>
+                    <th>Driver Name</th>
+                    <th>Run</th>
+                    <th>Driver (on days off)</th>
+                    <th>Shift</th>
+                    <th>Date</th>
+                </tr>
+            </thead>
+            <tbody>`;
 
-        // Get the container where tables will be added
-        const container = document.getElementById("schedule-container");
-        container.innerHTML = ""; // Clear previous content
+        rows
+            .filter(row => row[6] === date) // Filter by date column
+            .forEach(row => {
+                tableHTML += `<tr>
+                    <td>${row[0]}</td>
+                    <td>${row[1]}</td>
+                    <td>${row[2]}</td>
+                    <td>${row[3]}</td>
+                    <td>${row[4]}</td>
+                    <td>${row[5]}</td>
+                    <td>${row[6]}</td>
+                </tr>`;
+            });
 
-        // Generate tables for each date dynamically
-        uniqueDates.forEach(date => {
-            let dayShifts = rows.filter(row => row[6]?.trim() === date && row[5]?.trim() === "Day");
-            let nightShifts = rows.filter(row => row[6]?.trim() === date && row[5]?.trim() === "Night");
-
-            console.log(`Shifts for ${date}: Day - ${dayShifts.length}, Night - ${nightShifts.length}`);
-
-            container.innerHTML += `
-                <h2>Shifts for ${date}</h2>
-                <h3>Day Shift</h3>
-                ${createTable(dayShifts)}
-                <h3>Night Shift</h3>
-                ${createTable(nightShifts)}
-            `;
-        });
-
-        console.log("Schedule updated successfully.");
-    } catch (error) {
-        console.error("Error loading CSV:", error);
-    }
-}
-
-function createTable(data) {
-    if (data.length === 0) return "<p>No shifts available.</p>";
-
-    let table = "<table><tr><th>Unit</th><th>Departure Time</th><th>Driver Name</th><th>Run</th><th>Driver (on days off)</th></tr>";
-    data.forEach(row => {
-        table += `<tr><td>${row[0]}</td><td>${row[1]}</td><td>${row[2]}</td><td>${row[3]}</td><td>${row[4]}</td></tr>`;
+        tableHTML += "</tbody></table><br>";
+        tableContainer.innerHTML += tableHTML;
     });
-    table += "</table>";
-    return table;
-}
 
-// Run the script after the page loads
-window.onload = loadCSV;
+    console.log("[Log] Schedule updated successfully.");
+}
