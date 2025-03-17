@@ -17,9 +17,15 @@ async function loadCSV() {
             return values.length === 7 ? values : null; // Ensure exactly 7 columns
         }).filter(row => row !== null);
 
-        // Extract unique dates (column index 6 is Date)
-        let uniqueDates = [...new Set(rows.map(row => row[6]?.trim()))].filter(date => date.match(/^\d{4}-\d{2}-\d{2}$/)).sort();
-        console.log("Unique dates found:", uniqueDates);
+        // Debug: Print first few rows
+        console.log("Parsed CSV rows:", rows.slice(0, 5));
+
+        // Ensure the correct column index is used for Date (last column)
+        let uniqueDates = [...new Set(rows.map(row => row[6]?.trim()))]
+            .filter(date => date.match(/^\d{4}-\d{2}-\d{2}$/)) // Ensure valid date format
+            .sort();
+
+        console.log("Extracted Unique Dates:", uniqueDates);
 
         // Get the container where tables will be added
         const container = document.getElementById("schedule-container");
@@ -29,6 +35,8 @@ async function loadCSV() {
         uniqueDates.forEach(date => {
             let dayShifts = rows.filter(row => row[6]?.trim() === date && row[5]?.trim() === "Day");
             let nightShifts = rows.filter(row => row[6]?.trim() === date && row[5]?.trim() === "Night");
+
+            console.log(`Shifts for ${date}: Day - ${dayShifts.length}, Night - ${nightShifts.length}`);
 
             container.innerHTML += `
                 <h2>Shifts for ${date}</h2>
