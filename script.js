@@ -18,21 +18,22 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function processCSV(csvText) {
         const rows = csvText.trim().split("\n").map(row => row.split(","));
-        const headers = rows[0].map(header => header.trim()); // Extract headers
+        const headers = rows[0]; // Extract headers
 
         console.log("CSV Headers:", headers);
 
-        shiftData = rows.slice(1).map(row => ({
-            date: row[6]?.trim(),
-            shift: row[5]?.trim(),
-            unit: row[0]?.trim(),
-            departureTime: row[1]?.trim(),
-            driverName: row[2]?.trim(),
-            run: row[3]?.trim(),
-            offDriver: row[4]?.trim()
-        }));
+        shiftData = rows.slice(1).map(row => {
+            return {
+                unit: row[0],
+                departureTime: row[1],
+                driverName: row[2],
+                run: row[3],
+                offDriver: row[4],
+                shift: row[5],
+                date: row[6]
+            };
+        });
 
-        // Get Unique Dates for Selection
         const uniqueDates = [...new Set(shiftData.map(entry => entry.date))].sort();
         console.log("Unique dates found:", uniqueDates);
 
@@ -68,56 +69,49 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function createTable(title, data) {
+        let table = document.createElement("table");
+
+        let thead = document.createElement("thead");
+        thead.innerHTML = `<tr>
+            <th>Unit</th>
+            <th>Departure Time</th>
+            <th>Driver Name</th>
+            <th>Run</th>
+            <th>Driver (on days off)</th>
+        </tr>`;
+        table.appendChild(thead);
+
+        let tbody = document.createElement("tbody");
+        data.forEach(entry => {
+            let row = document.createElement("tr");
+            row.innerHTML = `<td>${entry.unit}</td>
+                             <td>${entry.departureTime}</td>
+                             <td>${entry.driverName}</td>
+                             <td>${entry.run}</td>
+                             <td>${entry.offDriver}</td>`;
+            tbody.appendChild(row);
+        });
+        table.appendChild(tbody);
+
         let section = document.createElement("div");
         section.innerHTML = `<h3>${title}</h3>`;
-
-        let table = document.createElement("table");
-        table.innerHTML = `
-            <thead>
-                <tr>
-                    <th>Unit</th>
-                    <th>Departure Time</th>
-                    <th>Driver Name</th>
-                    <th>Run</th>
-                    <th>Driver (on days off)</th>
-                </tr>
-            </thead>
-            <tbody>
-                ${data.map(entry => `
-                    <tr>
-                        <td>${entry.unit}</td>
-                        <td>${entry.departureTime}</td>
-                        <td>${entry.driverName}</td>
-                        <td>${entry.run}</td>
-                        <td>${entry.offDriver}</td>
-                    </tr>
-                `).join('')}
-            </tbody>
-        `;
         section.appendChild(table);
         return section;
     }
 
-    // 🌙 Auto Dark Mode
-    function applyDarkModePreference() {
-        const systemPrefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-        const savedDarkMode = localStorage.getItem("dark-mode");
+    // Dark Mode Toggle
+    darkModeToggle.addEventListener("click", () => {
+        document.body.classList.toggle("dark-mode");
+        localStorage.setItem("dark-mode", document.body.classList.contains("dark-mode"));
+    });
 
-        if (savedDarkMode === "true" || (savedDarkMode === null && systemPrefersDark)) {
-            document.body.classList.add("dark-mode");
-        } else {
-            document.body.classList.remove("dark-mode");
-        }
+    // Auto Dark Mode Detection
+    if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
+        document.body.classList.add("dark-mode");
     }
 
-    // 🎛 Dark Mode Toggle
-    if (darkModeToggle) {
-        darkModeToggle.addEventListener("click", () => {
-            document.body.classList.toggle("dark-mode");
-            localStorage.setItem("dark-mode", document.body.classList.contains("dark-mode"));
-        });
+    // Load Dark Mode Preference
+    if (localStorage.getItem("dark-mode") === "true") {
+        document.body.classList.add("dark-mode");
     }
-
-    // ✅ Apply dark mode on page load
-    applyDarkModePreference();
 });
