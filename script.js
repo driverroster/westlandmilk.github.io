@@ -18,9 +18,9 @@ document.addEventListener("DOMContentLoaded", function () {
         shiftData = rows.slice(1).map(row => ({
             truck: row[0].trim(),
             start: row[1].trim(),
-            driver: row[2].trim().split(" ")[0],
+            driver: row[2].trim().split(" ")[0], // Extract only the first name
             run: row[3].trim().replace(/^"|"$/g, ""), // Remove quotes
-            off: row[4].trim(),
+            off: row[4].trim().split(" ")[0], // Extract only the first name
             shift: row[5].trim(),
             date: row[6].trim()
         }));
