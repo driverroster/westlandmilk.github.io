@@ -18,7 +18,7 @@ document.addEventListener("DOMContentLoaded", function () {
         shiftData = rows.slice(1).map(row => ({
             truck: row[0].trim(),
             start: row[1].trim(),
-            driver: row[2].trim(),
+            driver: row[2].trim().split(" ")[0],
             run: row[3].trim().replace(/^"|"$/g, ""), // Remove quotes
             off: row[4].trim(),
             shift: row[5].trim(),
