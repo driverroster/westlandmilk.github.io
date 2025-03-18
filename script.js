@@ -89,12 +89,16 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Dark Mode Handling
     function applyDarkMode() {
-        document.body.classList.toggle("dark-mode", localStorage.getItem("dark-mode") === "true");
+        const isDarkMode = localStorage.getItem("dark-mode") === "true" || window.matchMedia("(prefers-color-scheme: dark)").matches;
+        document.body.classList.toggle("dark-mode", isDarkMode);
+        darkModeToggle.textContent = isDarkMode ? "Light Mode" : "Dark Mode";
     }
     
     darkModeToggle.addEventListener("click", () => {
-        document.body.classList.toggle("dark-mode");
-        localStorage.setItem("dark-mode", document.body.classList.contains("dark-mode"));
+        const isDarkMode = !document.body.classList.contains("dark-mode");
+        document.body.classList.toggle("dark-mode", isDarkMode);
+        localStorage.setItem("dark-mode", isDarkMode);
+        darkModeToggle.textContent = isDarkMode ? "Light Mode" : "Dark Mode";
     });
 
     applyDarkMode();
