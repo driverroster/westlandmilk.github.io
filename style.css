@@ -1,9 +1,9 @@
-/* General Styles with Westland Color Theme */
+/* General Styles with a Balanced Theme */
 body {
     font-family: "Arial", sans-serif;
     margin: 0;
     padding: 0;
-    background-color: #f5f5f5;
+    background-color: #f8f9fa;
     color: #333;
     transition: background-color 0.3s, color 0.3s;
     width: 100%;
@@ -13,71 +13,71 @@ body {
 /* Dark Mode Auto Detection */
 @media (prefers-color-scheme: dark) {
     body {
-        background-color: #1B3E2A;
-        color: #F0F7EE;
+        background-color: #2B2D42;
+        color: #EAEAEA;
     }
     .container {
-        background: #264D37;
+        background: #3C3F58;
         box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
     }
     table {
         background: transparent;
-        color: #F0F7EE;
+        color: #EAEAEA;
     }
     th {
-        background-color: #2A7C4F;
+        background-color: #4A4E69;
         color: white;
     }
     tr:nth-child(even) {
-        background-color: #316C4F;
+        background-color: #505974;
     }
     tr:hover {
-        background-color: #3A7D5E;
+        background-color: #616C8C;
     }
     select {
-        background: #264D37;
+        background: #3C3F58;
         color: #fff;
-        border: 1px solid #3A7D5E;
+        border: 1px solid #616C8C;
     }
     h3 {
-        color: #C3E2C2;
+        color: #B0C4DE;
     }
 }
 
 /* Manual Dark Mode Toggle */
 .dark-mode {
-    background-color: #1B3E2A;
-    color: #F0F7EE;
+    background-color: #2B2D42;
+    color: #EAEAEA;
 }
 .dark-mode .container {
-    background: #264D37;
+    background: #3C3F58;
 }
 .dark-mode table {
     background: transparent;
-    color: #F0F7EE;
+    color: #EAEAEA;
 }
 .dark-mode th {
-    background-color: #2A7C4F;
+    background-color: #4A4E69;
     color: white;
 }
 .dark-mode tr:nth-child(even) {
-    background-color: #316C4F;
+    background-color: #505974;
 }
 .dark-mode tr:hover {
-    background-color: #3A7D5E;
+    background-color: #616C8C;
 }
 .dark-mode select {
-    background: #264D37;
+    background: #3C3F58;
     color: #fff;
-    border: 1px solid #3A7D5E;
+    border: 1px solid #616C8C;
 }
 .dark-mode h3 {
-    color: #C3E2C2;
+    color: #B0C4DE;
 }
 
 /* Light Mode Theme */
 h3 {
-    color: #2A7C4F;
+    color: #4A4E69;
 }
 .container {
     width: 100%;
@@ -95,26 +95,26 @@ h3 {
 button {
     padding: 12px;
     font-size: 16px;
-    border: 1px solid #2A7C4F;
+    border: 1px solid #4A4E69;
     border-radius: 5px;
-    background: #3A7D5E;
+    background: #616C8C;
     color: white;
     cursor: pointer;
     transition: background 0.3s, transform 0.1s ease-in-out;
 }
 button:hover {
-    background-color: #2A7C4F;
+    background-color: #4A4E69;
     transform: scale(1.05);
 }
 select {
     background: #FFFFFF;
     color: #333;
     cursor: pointer;
-    border: 1px solid #2A7C4F;
+    border: 1px solid #4A4E69;
     padding: 10px;
 }
 .dark-mode select {
-    background: #264D37;
+    background: #3C3F58;
     color: #FFFFFF;
 }
 
@@ -137,21 +137,21 @@ table {
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 th, td {
-    border: 1px solid #2A7C4F;
+    border: 1px solid #4A4E69;
     padding: 12px;
     text-align: left;
     font-size: 16px;
 }
 th {
-    background-color: #3A7D5E;
+    background-color: #616C8C;
     color: white;
     text-transform: uppercase;
 }
 tr:nth-child(even) {
-    background-color: #E6F4E8;
+    background-color: #F2F3F7;
 }
 tr:hover {
-    background-color: #C3E2C2;
+    background-color: #D3D4DD;
     transition: background 0.2s;
 }
 
