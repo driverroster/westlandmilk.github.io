@@ -19,7 +19,7 @@ document.addEventListener("DOMContentLoaded", function () {
             truck: row[0].trim(),
             start: row[1].trim(),
             driver: row[2].trim(),
-            run: row[3].trim(),
+            run: row[3].trim().replace(/^"|"$/g, ""), // Remove quotes
             off: row[4].trim(),
             shift: row[5].trim(),
             date: row[6].trim()
