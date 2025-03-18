@@ -13,68 +13,71 @@ body {
 /* Dark Mode Auto Detection */
 @media (prefers-color-scheme: dark) {
     body {
-        background-color: #183D2D;
-        color: #FFFFFF;
+        background-color: #1B3E2A;
+        color: #F0F7EE;
     }
     .container {
-        background: #1F4C38;
+        background: #264D37;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
     }
     table {
         background: transparent;
-        color: #FFFFFF;
+        color: #F0F7EE;
     }
     th {
-        background-color: #006400;
+        background-color: #2A7C4F;
         color: white;
     }
     tr:nth-child(even) {
-        background-color: #255740;
+        background-color: #316C4F;
     }
     tr:hover {
-        background-color: #2F6B4E;
+        background-color: #3A7D5E;
     }
     select {
-        background: #1F4C38;
+        background: #264D37;
         color: #fff;
+        border: 1px solid #3A7D5E;
     }
     h3 {
-        color: #A9CDA6;
+        color: #C3E2C2;
     }
 }
 
 /* Manual Dark Mode Toggle */
 .dark-mode {
-    background-color: #183D2D;
-    color: #FFFFFF;
+    background-color: #1B3E2A;
+    color: #F0F7EE;
 }
 .dark-mode .container {
-    background: #1F4C38;
+    background: #264D37;
 }
 .dark-mode table {
     background: transparent;
-    color: #FFFFFF;
+    color: #F0F7EE;
 }
 .dark-mode th {
-    background-color: #008000;
+    background-color: #2A7C4F;
     color: white;
 }
 .dark-mode tr:nth-child(even) {
-    background-color: #255740;
+    background-color: #316C4F;
 }
 .dark-mode tr:hover {
-    background-color: #2F6B4E;
+    background-color: #3A7D5E;
 }
 .dark-mode select {
-    background: #1F4C38;
+    background: #264D37;
     color: #fff;
+    border: 1px solid #3A7D5E;
 }
 .dark-mode h3 {
-    color: #A9CDA6;
+    color: #C3E2C2;
 }
 
 /* Light Mode Theme */
 h3 {
-    color: #008000;
+    color: #2A7C4F;
 }
 .container {
     width: 100%;
@@ -84,7 +87,7 @@ h3 {
     text-align: center;
     border-radius: 10px;
     background: white;
-    box-shadow: none;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     transition: background-color 0.3s;
 }
 
@@ -92,26 +95,26 @@ h3 {
 button {
     padding: 12px;
     font-size: 16px;
-    border: 1px solid #006400;
+    border: 1px solid #2A7C4F;
     border-radius: 5px;
-    background: #008000;
+    background: #3A7D5E;
     color: white;
     cursor: pointer;
     transition: background 0.3s, transform 0.1s ease-in-out;
 }
 button:hover {
-    background-color: #006400;
+    background-color: #2A7C4F;
     transform: scale(1.05);
 }
 select {
     background: #FFFFFF;
     color: #333;
     cursor: pointer;
-    border: 1px solid #008000;
+    border: 1px solid #2A7C4F;
     padding: 10px;
 }
 .dark-mode select {
-    background: #1F4C38;
+    background: #264D37;
     color: #FFFFFF;
 }
 
@@ -131,24 +134,24 @@ table {
     color: #333;
     border-radius: 5px;
     overflow: hidden;
-    box-shadow: none;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 th, td {
-    border: 1px solid #006400;
+    border: 1px solid #2A7C4F;
     padding: 12px;
     text-align: left;
     font-size: 16px;
 }
 th {
-    background-color: #008000;
+    background-color: #3A7D5E;
     color: white;
     text-transform: uppercase;
 }
 tr:nth-child(even) {
-    background-color: #DFF0D8;
+    background-color: #E6F4E8;
 }
 tr:hover {
-    background-color: #A9CDA6;
+    background-color: #C3E2C2;
     transition: background 0.2s;
 }
 
