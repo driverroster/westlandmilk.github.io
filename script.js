@@ -54,24 +54,6 @@ document.addEventListener("DOMContentLoaded", function () {
     }
     
     function createTable(title, data) {
-        let section = document.createElement("div");
-        section.style.position = "relative";
-        section.style.marginBottom = "20px";
-
-        let titleDiv = document.createElement("div");
-        titleDiv.style.position = "sticky";
-        titleDiv.style.top = "0";
-        titleDiv.style.background = "#fff";
-        titleDiv.style.zIndex = "150";
-        titleDiv.style.padding = "10px 0";
-        titleDiv.style.textAlign = "center";
-        titleDiv.style.borderBottom = "1px solid #ddd";
-        titleDiv.innerHTML = `<h3>${title}</h3>`;
-
-        let tableContainer = document.createElement("div");
-        tableContainer.style.overflow = "auto";
-        tableContainer.style.maxHeight = "60vh";
-
         let table = document.createElement("table");
         let thead = document.createElement("thead");
         thead.innerHTML = `<tr>
@@ -82,7 +64,7 @@ document.addEventListener("DOMContentLoaded", function () {
             <th>Off</th>
         </tr>`;
         thead.style.position = "sticky";
-        thead.style.top = "40px";
+        thead.style.top = "0";
         thead.style.background = "#fff";
         thead.style.zIndex = "100";
         table.appendChild(thead);
@@ -99,9 +81,9 @@ document.addEventListener("DOMContentLoaded", function () {
         });
         table.appendChild(tbody);
         
-        tableContainer.appendChild(table);
-        section.appendChild(titleDiv);
-        section.appendChild(tableContainer);
+        let section = document.createElement("div");
+        section.innerHTML = `<h3>${title}</h3>`;
+        section.appendChild(table);
         return section;
     }
     
