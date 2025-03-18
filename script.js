@@ -19,7 +19,7 @@ document.addEventListener("DOMContentLoaded", function () {
             truck: row[0].trim(),
             start: row[1].trim(),
             driver: row[2].trim().split(" ")[0], // Extract only the first name
-            run: row[3].trim().replace(/^"|"$/g, ""), // Remove quotes
+            run: row[3].trim().replace(/^"|"$/g, "").replace(/,/g, " - "), // Remove quotes and replace commas with dashes
             off: row[4].trim().split(" ")[0], // Extract only the first name
             shift: row[5].trim(),
             date: row[6].trim()
