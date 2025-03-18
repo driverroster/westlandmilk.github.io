@@ -1,10 +1,11 @@
-/* General Styles */
+/* General Styles with Westland Color Theme */
 body {
     font-family: "Arial", sans-serif;
     margin: 0;
     padding: 0;
     background-color: #f5f5f5;
     color: #333;
+    transition: background-color 0.3s, color 0.3s;
     width: 100%;
     overflow-x: hidden;
 }
@@ -12,71 +13,69 @@ body {
 /* Dark Mode Auto Detection */
 @media (prefers-color-scheme: dark) {
     body {
-        background-color: #181818;
-        color: #f5f5f5;
+        background-color: #183D2D;
+        color: #FFFFFF;
     }
     .container {
-        background: #252525;
+        background: #1F4C38;
     }
     table {
         background: transparent;
-        color: #f5f5f5;
+        color: #FFFFFF;
     }
     th {
-        background-color: #007bff;
+        background-color: #006400;
         color: white;
     }
     tr:nth-child(even) {
-        background-color: #303030;
+        background-color: #255740;
     }
     tr:hover {
-        background-color: #404040;
+        background-color: #2F6B4E;
     }
     select {
-        background: #444;
+        background: #1F4C38;
         color: #fff;
     }
     h3 {
-        color: #f5f5f5;
+        color: #A9CDA6;
     }
 }
 
 /* Manual Dark Mode Toggle */
 .dark-mode {
-    background-color: #181818;
-    color: #f5f5f5;
+    background-color: #183D2D;
+    color: #FFFFFF;
 }
 .dark-mode .container {
-    background: #252525;
+    background: #1F4C38;
 }
 .dark-mode table {
     background: transparent;
-    color: #f5f5f5;
+    color: #FFFFFF;
 }
 .dark-mode th {
-    background-color: #0056b3;
+    background-color: #008000;
     color: white;
 }
 .dark-mode tr:nth-child(even) {
-    background-color: #303030;
+    background-color: #255740;
 }
 .dark-mode tr:hover {
-    background-color: #404040;
+    background-color: #2F6B4E;
 }
 .dark-mode select {
-    background: #444;
+    background: #1F4C38;
     color: #fff;
 }
 .dark-mode h3 {
-    color: #f5f5f5;
+    color: #A9CDA6;
 }
 
-/* Light Mode Fix */
+/* Light Mode Theme */
 h3 {
-    color: #333;
+    color: #008000;
 }
-
-/* Container */
 .container {
     width: 100%;
     max-width: 100%;
@@ -89,59 +88,31 @@ h3 {
     transition: background-color 0.3s;
 }
 
-/* Header */
-h2 {
-    font-size: 28px;
-    margin-bottom: 15px;
-}
-
-/* Controls */
-.controls {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 20px;
-}
-select, button {
+/* Buttons */
+button {
     padding: 12px;
     font-size: 16px;
-    border: 1px solid #ccc;
+    border: 1px solid #006400;
     border-radius: 5px;
-    background: #007bff;
+    background: #008000;
     color: white;
     cursor: pointer;
     transition: background 0.3s, transform 0.1s ease-in-out;
 }
 button:hover {
-    background-color: #0056b3;
+    background-color: #006400;
     transform: scale(1.05);
 }
 select {
-    background: #fff;
+    background: #FFFFFF;
     color: #333;
     cursor: pointer;
+    border: 1px solid #008000;
+    padding: 10px;
 }
 .dark-mode select {
-    background: #444;
-    color: #fff;
-}
-
-/* Dark Mode Toggle */
-#dark-mode-toggle {
-    border: none;
-    padding: 10px 15px;
-    font-size: 16px;
-    border-radius: 5px;
-    background: #007bff;
-    color: white;
-    cursor: pointer;
-    transition: background 0.3s;
-}
-.dark-mode #dark-mode-toggle {
-    background: #42aaff;
-    color: black;
+    background: #1F4C38;
+    color: #FFFFFF;
 }
 
 /* Table Container (Scrollable on Small Screens) */
@@ -163,21 +134,21 @@ table {
     box-shadow: none;
 }
 th, td {
-    border: 1px solid #ddd;
-    padding: 6px;
+    border: 1px solid #006400;
+    padding: 12px;
     text-align: left;
     font-size: 16px;
 }
 th {
-    background-color: #007bff;
+    background-color: #008000;
     color: white;
     text-transform: uppercase;
 }
 tr:nth-child(even) {
-    background-color: #f9f9f9;
+    background-color: #DFF0D8;
 }
 tr:hover {
-    background-color: #e8f0ff;
+    background-color: #A9CDA6;
     transition: background 0.2s;
 }
 
