@@ -54,6 +54,15 @@ document.addEventListener("DOMContentLoaded", function () {
     }
     
     function createTable(title, data) {
+        let section = document.createElement("div");
+        section.style.position = "sticky";
+        section.style.top = "0";
+        section.style.background = "#fff";
+        section.style.zIndex = "150";
+        section.style.padding = "10px 0";
+        section.style.textAlign = "center";
+        section.innerHTML = `<h3>${title}</h3>`;
+
         let table = document.createElement("table");
         let thead = document.createElement("thead");
         thead.innerHTML = `<tr>
@@ -64,7 +73,7 @@ document.addEventListener("DOMContentLoaded", function () {
             <th>Off</th>
         </tr>`;
         thead.style.position = "sticky";
-        thead.style.top = "0";
+        thead.style.top = "40px";
         thead.style.background = "#fff";
         thead.style.zIndex = "100";
         table.appendChild(thead);
@@ -81,8 +90,6 @@ document.addEventListener("DOMContentLoaded", function () {
         });
         table.appendChild(tbody);
         
-        let section = document.createElement("div");
-        section.innerHTML = `<h3>${title}</h3>`;
         section.appendChild(table);
         return section;
     }
