@@ -14,14 +14,13 @@ document.addEventListener("DOMContentLoaded", function () {
     function processCSV(csvText) {
         // Handle quoted fields and split properly
         const rows = csvText.trim().split("\n").map(row => row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/));
-        const headers = rows[0];
         
         shiftData = rows.slice(1).map(row => ({
-            unit: row[0].trim(),
-            departureTime: row[1].trim(),
-            driverName: row[2].trim(),
+            truck: row[0].trim(),
+            start: row[1].trim(),
+            driver: row[2].trim(),
             run: row[3].trim(),
-            offDriver: row[4].trim(),
+            off: row[4].trim(),
             shift: row[5].trim(),
             date: row[6].trim()
         }));
@@ -58,22 +57,22 @@ document.addEventListener("DOMContentLoaded", function () {
         let table = document.createElement("table");
         let thead = document.createElement("thead");
         thead.innerHTML = `<tr>
-            <th>Unit</th>
-            <th>Departure Time</th>
-            <th>Driver Name</th>
+            <th>Truck</th>
+            <th>Start</th>
+            <th>Driver</th>
             <th>Run</th>
-            <th>Driver (on days off)</th>
+            <th>Off</th>
         </tr>`;
         table.appendChild(thead);
         
         let tbody = document.createElement("tbody");
         data.forEach(entry => {
             let row = document.createElement("tr");
-            row.innerHTML = `<td>${entry.unit}</td>
-                             <td>${entry.departureTime}</td>
-                             <td>${entry.driverName}</td>
+            row.innerHTML = `<td>${entry.truck}</td>
+                             <td>${entry.start}</td>
+                             <td>${entry.driver}</td>
                              <td>${entry.run}</td>
-                             <td>${entry.offDriver}</td>`;
+                             <td>${entry.off}</td>`;
             tbody.appendChild(row);
         });
         table.appendChild(tbody);
