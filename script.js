@@ -63,6 +63,10 @@ document.addEventListener("DOMContentLoaded", function () {
             <th>Run</th>
             <th>Off</th>
         </tr>`;
+        thead.style.position = "sticky";
+        thead.style.top = "0";
+        thead.style.background = "#fff";
+        thead.style.zIndex = "100";
         table.appendChild(thead);
         
         let tbody = document.createElement("tbody");
