@@ -2,7 +2,7 @@
 body {
     font-family: "Arial", sans-serif;
     margin: 0;
-    padding: 20px;
+    /*padding: 20px;*/
     background-color: var(--bg);
     color: var(--text);
     transition: background-color 0.3s, color 0.3s;
@@ -45,7 +45,7 @@ body {
     margin: auto;
     padding: 20px;
     text-align: center;
-    border-radius: 10px;
+    /*border-radius: 10px;*/
     background: var(--container-bg);
     transition: background-color 0.3s;
 }
