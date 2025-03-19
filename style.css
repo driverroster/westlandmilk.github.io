@@ -17,7 +17,7 @@ body {
     --table-header-text: #fff;
     --table-hover: #e8f0ff;
     --table-even: #f9f9f9;
-    --button-bg: #007bff;
+    --button-bg: var(--bg);
     --button-text: white;
     --button-hover-bg: var(--table-header);
     --button-hover-text: var(--table-header-text);
