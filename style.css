@@ -3,90 +3,42 @@ body {
     font-family: "Arial", sans-serif;
     margin: 0;
     padding: 20px;
-    background-color: #f5f5f5;
-    color: #333;
+    background-color: var(--bg);
+    color: var(--text);
     transition: background-color 0.3s, color 0.3s;
 }
 
-/* Ensure all elements have correct default styles */
-.container, table, th, td, select {
-    background: white;
-    color: #333;
+/* Default Light Mode Variables */
+:root {
+    --bg: #f5f5f5;
+    --text: #333;
+    --container-bg: #fff;
+    --table-bg: #fff;
+    --table-text: #333;
+    --table-header: #007bff;
+    --table-header-text: #fff;
+    --table-hover: #e8f0ff;
+    --table-even: #f9f9f9;
+    --button-bg: #007bff;
+    --button-text: white;
 }
 
-/* Light Mode Fixes */
-h3 {
-    color: #333 !important; /* Dark text in light mode */
-}
-
-/* Dark Mode Auto Detection */
-@media (prefers-color-scheme: dark) {
-    body {
-        background-color: #181818;
-        color: #f5f5f5;
-    }
-    .container {
-        background: #252525;
-    }
-    table {
-        background: #252525;
-        color: #f5f5f5;
-    }
-    th {
-        background-color: #007bff;
-        color: white;
-    }
-    tr:nth-child(even) {
-        background-color: #303030;
-    }
-    tr:hover {
-        background-color: #404040;
-    }
-    select {
-        background: #444;
-        color: #fff;
-    }
-    h3 {
-        color: #f5f5f5 !important; /* Light text for headers in dark mode */
-    }
-}
-
-/* Manual Dark Mode Toggle */
+/* Dark Mode (Only Activated Manually) */
 .dark-mode {
-    background-color: #181818;
-    color: #f5f5f5;
-}
-.dark-mode .container {
-    background: #252525;
-}
-.dark-mode table {
-    background: #252525;
-    color: #f5f5f5;
-}
-.dark-mode th {
-    background-color: #0056b3;
-    color: white;
-}
-.dark-mode tr:nth-child(even) {
-    background-color: #303030;
-}
-.dark-mode tr:hover {
-    background-color: #404040;
-}
-.dark-mode select {
-    background: #444;
-    color: #fff;
-}
-.dark-mode h3 {
-    color: #f5f5f5 !important; /* Light text in manual dark mode */
+    --bg: #181818;
+    --text: #f5f5f5;
+    --container-bg: #252525;
+    --table-bg: #252525;
+    --table-text: #f5f5f5;
+    --table-header: #0056b3;
+    --table-header-text: white;
+    --table-hover: #404040;
+    --table-even: #303030;
+    --button-bg: #42aaff;
+    --button-text: black;
 }
 
-/* Light Mode Override */
-.light-mode h3 {
-    color: #333 !important;
-}
-
-/* Container */
+/* Apply Variables */
 .container {
     max-width: 1000px;
     width: 100%;
@@ -94,15 +46,14 @@ h3 {
     padding: 20px;
     text-align: center;
     border-radius: 10px;
-    background: white;
+    background: var(--container-bg);
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
     transition: background-color 0.3s;
 }
 
-/* Header */
-h2 {
-    font-size: 28px;
-    margin-bottom: 15px;
+/* Headers */
+h2, h3 {
+    color: var(--text);
 }
 
 /* Controls */
@@ -114,43 +65,40 @@ h2 {
     gap: 10px;
     margin-bottom: 20px;
 }
+
 select, button {
     padding: 12px;
     font-size: 16px;
     border: 1px solid #ccc;
     border-radius: 5px;
-    background: #007bff;
-    color: white;
+    background: var(--button-bg);
+    color: var(--button-text);
     cursor: pointer;
     transition: background 0.3s, transform 0.1s ease-in-out;
 }
+
 button:hover {
-    background-color: #0056b3;
+    background-color: var(--table-header);
     transform: scale(1.05);
 }
+
 select {
-    background: white !important;
-    color: #333 !important;
+    background: var(--container-bg);
+    color: var(--text);
     cursor: pointer;
 }
 
-/* Dark Mode Toggle */
+/* Dark Mode Toggle Button */
 #dark-mode-toggle {
     border: none;
     padding: 10px 15px;
     font-size: 16px;
     border-radius: 5px;
-    background: #007bff;
-    color: white;
     cursor: pointer;
     transition: background 0.3s;
 }
-.dark-mode #dark-mode-toggle {
-    background: #42aaff;
-    color: black;
-}
 
-/* Table Container (Ensures Table Stays Within View) */
+/* Table Container */
 .table-container {
     overflow-x: auto;
     max-width: 100%;
@@ -166,28 +114,32 @@ table {
     table-layout: auto;
     border-collapse: collapse;
     margin-top: 20px;
-    background: white !important;
-    color: #333 !important;
+    background: var(--table-bg);
+    color: var(--table-text);
     border-radius: 5px;
     overflow: hidden;
     box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
 }
+
 th, td {
     border: 1px solid #ddd;
     padding: 12px;
     text-align: left;
     font-size: 16px;
 }
+
 th {
-    background-color: #007bff;
-    color: white;
+    background-color: var(--table-header);
+    color: var(--table-header-text);
     text-transform: uppercase;
 }
+
 tr:nth-child(even) {
-    background-color: #f9f9f9;
+    background-color: var(--table-even);
 }
+
 tr:hover {
-    background-color: #e8f0ff;
+    background-color: var(--table-hover);
     transition: background 0.2s;
 }
 
