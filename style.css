@@ -99,8 +99,7 @@ button {
 button:hover {
     background: var(--button-hover-bg);
     color: var(--button-hover-text);
-    transform: scale(1.05);
-}
+	s}
 
 /* Select Styling */
 select {
