@@ -8,6 +8,16 @@ body {
     transition: background-color 0.3s, color 0.3s;
 }
 
+/* Light Mode Fix - Ensure Proper Colors */
+.container,
+table,
+th,
+td,
+select {
+    background: white;
+    color: #333; /* Ensures text is readable in light mode */
+}
+
 /* Dark Mode Auto Detection */
 @media (prefers-color-scheme: dark) {
     body {
@@ -64,6 +74,16 @@ body {
     color: #fff;
 }
 
+/* Ensure Light Mode Overrides Dark Mode */
+.light-mode .container,
+.light-mode table,
+.light-mode th,
+.light-mode td,
+.light-mode select {
+    background: white !important;
+    color: #333 !important;
+}
+
 /* Container */
 .container {
     max-width: 1000px;
@@ -107,7 +127,7 @@ button:hover {
     transform: scale(1.05);
 }
 select {
-    background: #fff;
+    background: white;
     color: #333;
     cursor: pointer;
 }
@@ -143,9 +163,9 @@ select {
 
 /* Table Styling */
 table {
-    width: 100%;  /* Ensures it takes the full available width */
-    min-width: 100%;  /* Forces the table to take full width on mobile */
-    table-layout: auto;  /* Allows flexible column widths */
+    width: 100%;  
+    min-width: 100%;  
+    table-layout: auto;  
     border-collapse: collapse;
     margin-top: 20px;
     background: white;
