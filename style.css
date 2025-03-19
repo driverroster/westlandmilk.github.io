@@ -47,7 +47,6 @@ body {
     text-align: center;
     border-radius: 10px;
     background: var(--container-bg);
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
     transition: background-color 0.3s;
 }
 
@@ -118,11 +117,10 @@ table {
     color: var(--table-text);
     border-radius: 5px;
     overflow: hidden;
-    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
 }
 
 th, td {
-    border: 1px solid #ddd;
+    /*border: 1px solid #ddd;*/
     padding: 12px;
     text-align: left;
     font-size: 16px;
