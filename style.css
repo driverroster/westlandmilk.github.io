@@ -2,13 +2,11 @@
 body {
     font-family: "Arial", sans-serif;
     margin: 0;
-    /*padding: 20px;*/
     background-color: var(--bg);
     color: var(--text);
-    transition: background-color 0.3s, color 0.3s;
 }
 
-/* Default Light Mode Variables */
+/* Theme Variables */
 :root {
     --bg: #3e545e;
     --text: #333;
@@ -21,6 +19,12 @@ body {
     --table-even: #f9f9f9;
     --button-bg: #007bff;
     --button-text: white;
+    --button-hover-bg: var(--table-header);
+    --button-hover-text: var(--table-header-text);
+    --select-bg: var(--button-bg);
+    --select-text: var(--button-text);
+    --select-hover-bg: var(--button-hover-bg);
+    --select-hover-text: var(--button-hover-text);
 }
 
 /* Dark Mode */
@@ -36,6 +40,12 @@ body {
     --table-even: #252e36;
     --button-bg: #2979ff;
     --button-text: white;
+    --button-hover-bg: var(--table-header);
+    --button-hover-text: var(--table-header-text);
+    --select-bg: var(--button-bg);
+    --select-text: var(--button-text);
+    --select-hover-bg: var(--button-hover-bg);
+    --select-hover-text: var(--button-hover-text);
 }
 
 /* Apply Variables */
@@ -45,9 +55,7 @@ body {
     margin: auto;
     padding: 20px 0;
     text-align: center;
-    /* border-radius: 10px; */
     background: var(--container-bg);
-    transition: background-color 0.3s;
 }
 
 /* Headers */
@@ -70,51 +78,48 @@ select, button {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    height: 44px; /* Ensures equal height */
-    min-width: 140px; /* Ensures equal width */
-    padding: 12px 16px; /* Uniform padding */
+    height: 44px;
+    min-width: 140px;
+    padding: 12px 16px;
     font-size: 16px;
     border: none;
     border-radius: 5px;
     outline: none;
     cursor: pointer;
     transition: background 0.3s, color 0.3s;
-    box-sizing: border-box; /* Ensures padding doesn't affect dimensions */
+    box-sizing: border-box;
 }
 
 button {
     background: var(--button-bg);
     color: var(--button-text);
-    transition: background 0.3s, transform 0.1s ease-in-out;
 }
 
 button:hover {
-    background-color: var(--table-header);
+    background: var(--button-hover-bg);
+    color: var(--button-hover-text);
     transform: scale(1.05);
 }
 
-/* Flat UI Select Styling */
+/* Select Styling */
 select {
     appearance: none;
     -webkit-appearance: none;
     -moz-appearance: none;
-    background: var(--bg);
-    color: var(--table-bg);
-    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg>');
-    background-repeat: no-repeat;
-    background-position: right 12px center;
-    background-size: 14px;
+    background: var(--select-bg);
+    color: var(--select-text);
     padding-right: 30px;
 }
 
 select:hover, select:focus {
-    background: var(--table-header);
+    background: var(--select-hover-bg);
+    color: var(--select-hover-text);
 }
 
 /* Dark Mode Select */
 .dark-mode select {
-    background: var(--table-bg);
-    color: var(--table-text);
+    background: var(--select-bg);
+    color: var(--select-text);
 }
 
 /* Dark Mode Toggle Button */
@@ -124,7 +129,6 @@ select:hover, select:focus {
     font-size: 16px;
     border-radius: 5px;
     cursor: pointer;
-    transition: background 0.3s;
 }
 
 /* Table Container */
@@ -145,8 +149,6 @@ table {
     margin-top: 20px;
     background: var(--table-bg);
     color: var(--table-text);
-    /* border-radius: 5px; */
-    overflow: hidden;
 }
 
 th, td {
@@ -156,18 +158,17 @@ th, td {
 }
 
 th {
-    background-color: var(--table-header);
+    background: var(--table-header);
     color: var(--table-header-text);
     text-transform: uppercase;
 }
 
 tr:nth-child(even) {
-    background-color: var(--table-even);
+    background: var(--table-even);
 }
 
 tr:hover {
-    background-color: var(--table-hover);
-    transition: background 0.2s;
+    background: var(--table-hover);
 }
 
 /* Responsive Design */
