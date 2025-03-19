@@ -134,15 +134,17 @@ select {
 
 /* Table Container (Ensures Table Stays Within View) */
 .table-container {
-    overflow-x: auto;  /* Enables horizontal scrolling */
+    overflow-x: auto;
     max-width: 100%;
     width: 100%;
+    display: flex;
+    justify-content: center;
 }
 
 /* Table Styling */
 table {
-    width: 100%;  /* Ensures it adapts to container */
-    min-width: unset;  /* Removes fixed min-width */
+    width: 100%;  /* Ensures it takes the full available width */
+    min-width: 100%;  /* Forces the table to take full width on mobile */
     table-layout: auto;  /* Allows flexible column widths */
     border-collapse: collapse;
     margin-top: 20px;
@@ -214,9 +216,13 @@ tr:hover {
         padding: 10px;
     }
     .table-container {
-        overflow-x: auto; /* Ensures scrolling on very small screens */
+        display: block;
+        overflow-x: auto;
+        width: 100%;
     }
     table {
+        width: 100%;
+        min-width: 100%;
         font-size: 10px;
     }
     th, td {
