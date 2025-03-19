@@ -188,6 +188,23 @@ tr:hover {
         align-items: center;
     }
     select, button {
+        width: auto;
+        min-width: 140px;
+        max-width: 200px;
+        text-align: center;
+        margin-top: 5px;
+    }
+    table {
+        font-size: 12px;
+    }
+    th, td {
+        padding: 8px;
+    }
+    h2 {
+        font-size: 22px;
+    }
+}
+    select, button {
         width: 100%;
         margin-top: 5px;
     }
