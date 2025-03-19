@@ -12,10 +12,10 @@ body {
 :root {
     --bg: #f5f5f5;
     --text: #333;
-    --container-bg: #394e58;
+    --container-bg: #6cbaba;
     --table-bg: #fff;
     --table-text: #333;
-    --table-header: #007bff;
+    --table-header: #394e58;
     --table-header-text: #fff;
     --table-hover: #e8f0ff;
     --table-even: #f9f9f9;
