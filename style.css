@@ -38,7 +38,7 @@ body {
     --table-header-text: #ffffff;
     --table-hover: #3c4a56;
     --table-even: #252e36;
-    --button-bg: #2979ff;
+    --button-bg: var(--bg);
     --button-text: white;
     --button-hover-bg: var(--table-header);
     --button-hover-text: var(--table-header-text);
