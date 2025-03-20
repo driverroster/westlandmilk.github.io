@@ -1,6 +1,22 @@
+/* Import Produkt Fonts */
+@font-face {
+    font-family: "Produkt";
+    src: url("fonts/Produkt-Regular-Web.woff2") format("woff2"),
+         url("fonts/Produkt-Regular-Web.woff") format("woff");
+    font-weight: 400;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "Produkt";
+    src: url("fonts/Produkt-Light-Web.woff2") format("woff2");
+    font-weight: 300;
+    font-style: normal;
+}
+
 /* General Styles */
 body {
-    font-family: "Arial", sans-serif;
+    font-family: "Produkt", "Arial", sans-serif;
     margin: 0;
     background-color: var(--bg);
     color: var(--text);
