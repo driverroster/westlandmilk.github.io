@@ -53,7 +53,7 @@ body {
     --table-header: #2e3b47;
     --table-header-text: #ffffff;
     --table-hover: #3c4a56;
-    --table-even: #252e36;
+    --table-even: #343434;
     --button-bg: var(--bg);
     --button-text: white;
     --button-hover-bg: var(--table-header);
