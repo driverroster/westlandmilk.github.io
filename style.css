@@ -70,6 +70,7 @@ body {
     width: 100%;
     margin: auto;
     padding: 5px 40px;
+    border-radius: 20px;
     text-align: center;
     background: var(--container-bg);
 }
